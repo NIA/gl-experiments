@@ -13,6 +13,9 @@ typedef unsigned int Index;
 
 class IDrawable {
 public:
+    // Should be called before draw but after context creation
+    virtual void init() = 0;
+    // Call rendering functions
     virtual void draw() = 0;
 };
 

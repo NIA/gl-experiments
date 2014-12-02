@@ -9,6 +9,7 @@ public:
     Sphere(float radius, Index edgesPerMeridian);
     ~Sphere();
 
+    void init();
     void draw();
 private:
     void initGeometry();

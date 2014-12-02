@@ -7,6 +7,10 @@ Sphere::Sphere(float radius_, Index edgesPerMeridian)
       verticesCount(0), indicesCount(0)
 {
     qDebug("Sphere init");
+}
+
+void Sphere::init() {
+    qDebug("Sphere::init");
 
     qDebug("initializeOpenGLFunctions()");
     initializeOpenGLFunctions();
@@ -128,7 +132,6 @@ void Sphere::initGeometry() {
     }
 }
 
-Sphere::~Sphere()
-{
+Sphere::~Sphere() {
     glDeleteBuffers(2, vboIds);
 }

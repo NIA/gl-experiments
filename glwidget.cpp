@@ -6,15 +6,6 @@ GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent), object(NULL)
 {
     qDebug("GLWidget init");
-
-    // TODO: how can demos work without manual context creation?
-    // TODO: probably, we should not call initializeOpenGlFucntions before initializeGL is called?
-    qDebug("new QOpenGLContext");
-    QOpenGLContext * context = new QOpenGLContext;
-    qDebug("context->create();");
-    context->create();
-    qDebug("context->makeCurrent(this->windowHandle())");
-    context->makeCurrent(this->windowHandle());
 }
 
 void GLWidget::setObject(IDrawable *object_)
@@ -33,6 +24,10 @@ void GLWidget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
     qglClearColor(Qt::black);
     qglColor(Qt::white);
+
+    if (object != NULL) {
+        object->init();
+    }
 }
 
 void GLWidget::resizeGL(int width, int height) {
