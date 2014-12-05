@@ -6,6 +6,10 @@ GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent), object(NULL)
 {
     qDebug("GLWidget init");
+
+    // Options defautls:
+    setWireframe(false);
+    setCullFace(true);
 }
 
 void GLWidget::setObject(IDrawable *object_)
@@ -14,9 +18,39 @@ void GLWidget::setObject(IDrawable *object_)
     object = object_;
 }
 
+
+void GLWidget::setWireframe(bool enabled) {
+    if (enabled == wireframe) {
+        return; // Nothing changed
+    }
+    wireframe = enabled;
+    if (wireframe) {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    } else {
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
+    updateGL();
+}
+
+void GLWidget::setCullFace(bool enabled) {
+    if (enabled == cullFace) {
+        return; // Nothing changed
+    }
+    cullFace = enabled;
+    if (cullFace) {
+        glEnable(GL_CULL_FACE);
+    } else {
+        glDisable(GL_CULL_FACE);
+    }
+    updateGL();
+}
+
 void GLWidget::initializeGL() {
     qDebug("GLWidget::initializeGL");
     initializeOpenGLFunctions();
+
+    // Enable depth buffer
+    glEnable(GL_DEPTH_TEST);
 
     initShaders();
 

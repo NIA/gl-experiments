@@ -43,15 +43,9 @@ void Sphere::draw(QGLShaderProgram *program)
     program->enableAttributeArray(vertexLocation);
     glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
-    // Enable wireframe
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
     // Draw geometry using indices from VBO 1
     qDebug("  glDrawElements");
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
-
-    // Disable wireframe
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
 

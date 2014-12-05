@@ -14,6 +14,10 @@ public:
 
     void setObject(IDrawable * object_);
 
+public slots:
+    void setWireframe(bool enabled);
+    void setCullFace(bool enabled);
+
 protected:
     void initializeGL();
     void paintGL();
@@ -23,6 +27,9 @@ private:
     void initShaders();
 
     IDrawable * object;
+    bool wireframe;
+    bool cullFace;
+
     QMatrix4x4 projection;
 
     QGLShaderProgram program;

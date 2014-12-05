@@ -15,7 +15,21 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,6">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,1">
+     <item>
+      <widget class="QCheckBox" name="isWireframe">
+       <property name="text">
+        <string>Wireframe</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="isCullFace">
+       <property name="text">
+        <string>Cull face</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QPushButton" name="btnWorkHard">
        <property name="text">
@@ -39,6 +53,11 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>isWireframe</tabstop>
+  <tabstop>isCullFace</tabstop>
+  <tabstop>btnWorkHard</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
