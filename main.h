@@ -1,6 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 #include <QVector3D>
+#include <QGLShaderProgram>
 
 struct Vertex
 {
@@ -16,7 +17,7 @@ public:
     // Should be called before draw but after context creation
     virtual void init() = 0;
     // Call rendering functions
-    virtual void draw() = 0;
+    virtual void draw(QGLShaderProgram * program) = 0;
 };
 
 #endif // MAIN_H

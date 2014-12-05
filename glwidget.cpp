@@ -1,6 +1,6 @@
 #include "glwidget.h"
-#include <QOpenGLContext>
-#include <QWindow>
+#include <QDebug>
+#include "main.h"
 
 GLWidget::GLWidget(QWidget *parent) :
     QGLWidget(parent), object(NULL)
@@ -16,12 +16,10 @@ void GLWidget::setObject(IDrawable *object_)
 
 void GLWidget::initializeGL() {
     qDebug("GLWidget::initializeGL");
-    // From "grabber" example
-    static const GLfloat lightPos[4] = { 5.0f, 5.0f, 10.0f, 1.0f };
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
+    initializeOpenGLFunctions();
+
+    initShaders();
+
     qglClearColor(Qt::black);
     qglColor(Qt::white);
 
@@ -30,14 +28,23 @@ void GLWidget::initializeGL() {
     }
 }
 
-void GLWidget::resizeGL(int width, int height) {
-    qDebug("GLWidget::resizeGL");
-    int side = qMin(width, height);
-    glViewport((width - side) / 2, (height - side) / 2, side, side);
+void GLWidget::resizeGL(int w, int h) {
+    qDebug(QString("GLWidget::resizeGL(%1,%2)").arg(w).arg(h).toLocal8Bit());
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-1.0, +1.0, -1.0, 1.0, 5.0, 60.0);
+    // Set OpenGL viewport to cover whole widget
+    glViewport(0, 0, w, h);
+
+    // Calculate aspect ratio
+    qreal aspect = qreal(w) / qreal(h ? h : 1);
+
+    // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
+    const qreal zNear = 3.0, zFar = 7.0, fov = 45.0;
+
+    // Reset projection
+    projection.setToIdentity();
+
+    // Set perspective projection
+    projection.perspective(fov, aspect, zNear, zFar);
 }
 
 void GLWidget::paintGL() {
@@ -45,9 +52,43 @@ void GLWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glPushMatrix();
 
+    // Calculate model view transformation
+    // TODO: get from Camera object
+    QMatrix4x4 matrix;
+    matrix.setToIdentity();
+    matrix.translate(0.0, 0.0, -2.0);
+    // Set modelview-projection matrix
+    qDebug("  setUniformValue");
+    program.setUniformValue("mvp_matrix", projection * matrix);
+
     if (object != NULL) {
-        object->draw();
+        object->draw(&program);
     }
 
     glPopMatrix();
+}
+
+void GLWidget::initShaders() {
+    qDebug("GLWidget::initShaders");
+
+    qDebug("  addShaderFromSourceFile");
+    if (!program.addShaderFromSourceFile(QGLShader::Vertex, ":/vshader.glsl")) {
+        qDebug() << program.log();
+        // TODO: proper error handling
+        exit(1);
+    }
+
+    qDebug("  link");
+    if (!program.link()) {
+        qDebug() << program.log();
+        // TODO: proper error handling
+        exit(1);
+    }
+
+    qDebug("  bind");
+    if (!program.link()) {
+        qDebug() << program.log();
+        // TODO: proper error handling
+        exit(1);
+    }
 }

@@ -23,3 +23,6 @@ HEADERS  += widget.h \
     main.h
 
 FORMS    += widget.ui
+
+RESOURCES += \
+    shaders.qrc

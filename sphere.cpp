@@ -12,14 +12,14 @@ Sphere::Sphere(float radius_, Index edgesPerMeridian)
 void Sphere::init() {
     qDebug("Sphere::init");
 
-    qDebug("initializeOpenGLFunctions()");
+    qDebug("  initializeOpenGLFunctions()");
     initializeOpenGLFunctions();
-    qDebug("glGenBuffers");
+    qDebug("  glGenBuffers");
     glGenBuffers(2, vboIds);
     // init geometry
     initGeometry(); // also initializes verticesCount and indicesCount
 
-    qDebug("data -> buffers");
+    qDebug("  data -> buffers");
     // Transfer vertex data to VBO 0
     glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
     glBufferData(GL_ARRAY_BUFFER, verticesCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
@@ -30,15 +30,28 @@ void Sphere::init() {
 }
 
 
-void Sphere::draw()
+void Sphere::draw(QGLShaderProgram *program)
 {
     qDebug("Sphere::draw");
+    qDebug("  glBindBuffer");
     // Tell OpenGL which VBOs to use
     glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
 
+    qDebug("  enableAttributeArray");
+    int vertexLocation = program->attributeLocation("a_position");
+    program->enableAttributeArray(vertexLocation);
+    glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+    // Enable wireframe
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
     // Draw geometry using indices from VBO 1
+    qDebug("  glDrawElements");
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+    // Disable wireframe
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
 

@@ -10,7 +10,7 @@ public:
     ~Sphere();
 
     void init();
-    void draw();
+    void draw(QGLShaderProgram *program);
 private:
     void initGeometry();
 
