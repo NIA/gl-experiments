@@ -65,7 +65,7 @@ inline Index sphereIndicesCount(Index edgesPerMeridian)
 }
 
 // a helper for filling index buffers
-inline void addTriangle( Index i1, Index i2, Index i3, Index *indices, DWORD &currentIndex, Index offset = 0 )
+inline void addTriangle( Index i1, Index i2, Index i3, Index *indices, Index &currentIndex, Index offset = 0 )
 {
     indices[currentIndex++] = i1 + offset;
     indices[currentIndex++] = i2 + offset;
@@ -81,7 +81,7 @@ void Sphere::initGeometry() {
     indices = new Index[indicesCount];
 
     Index vertex = 0;
-    DWORD index = 0;
+    Index index = 0;
 
     float angleStep = static_cast<float>(M_PI)/edgesPerMeridian;
 
